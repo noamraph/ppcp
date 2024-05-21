@@ -94,7 +94,7 @@ impl OperationCopy {
             // cp /dir1 /dir2 /file . -> cp /dir1/* ./dir; cp /dir2/* ./dir2; cp /file ./
             (false, dest.clone())
         } else {
-            let meta = fs::symlink_metadata(&dest)?;
+            let meta = fs::symlink_metadata(dest)?;
             if meta.is_file() {
                 // cp /path/to/file.txt ./here/file.txt: dest_dir = ./here
                 (true, dest_parent)
@@ -201,7 +201,6 @@ impl CopyWorker {
                     let link_dest = std::fs::read_link(&p).unwrap();
                     std::os::unix::fs::symlink(&link_dest, &dest_file).unwrap_or_else(|err| {
                         eprintln!("Error creating symlink: {}", err);
-                        ()
                     }); // FIXME
                     tx.send((p, sz as u32, sz, sz)).unwrap();
                     continue;
